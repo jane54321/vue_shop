@@ -13,7 +13,8 @@
                 </el-form-item>
                 <!--  密码  -->
                 <el-form-item prop="password">
-                    <el-input type="password" v-model="loginForm.password" prefix-icon="iconfont icon-3702mima"></el-input>
+                    <el-input type="password" v-model="loginForm.password"
+                              prefix-icon="iconfont icon-3702mima"></el-input>
                 </el-form-item>
                 <!--  按钮  -->
                 <el-form-item class="btns">
@@ -26,56 +27,56 @@
 </template>
 
 <script>
-export default {
-  name: 'Login',
-  data () {
-    return {
-      // 这是登录表单数据的绑定对象
-      loginForm: {
-        username: '',
-        password: ''
-      },
-      // 这是表单的验证规则对象
-      loginFormRules: {
-        // 验证用户名是否合法
-        username: [
-          { required: true, message: '请输入用户名', trigger: 'blur' },
-          { min: 5, max: 10, message: '长度在 5 到 10 个字符', trigger: 'blur' }
-        ],
-        // 验证密码是否合法
-        password: [
-          { required: true, message: '请输入密码', trigger: 'blur' },
-          { min: 6, max: 15, message: '长度在 6 到 15 个字符', trigger: 'blur' }
-        ]
-      }
+    export default {
+        name: 'Login',
+        data() {
+            return {
+                // 这是登录表单数据的绑定对象
+                loginForm: {
+                    username: '',
+                    password: ''
+                },
+                // 这是表单的验证规则对象
+                loginFormRules: {
+                    // 验证用户名是否合法
+                    username: [
+                        {required: true, message: '请输入用户名', trigger: 'blur'},
+                        {min: 5, max: 10, message: '长度在 5 到 10 个字符', trigger: 'blur'}
+                    ],
+                    // 验证密码是否合法
+                    password: [
+                        {required: true, message: '请输入密码', trigger: 'blur'},
+                        {min: 6, max: 15, message: '长度在 6 到 15 个字符', trigger: 'blur'}
+                    ]
+                }
+            }
+        },
+        methods: {
+            // 表单重置
+            reset() {
+                // resetFields是element-ui,from表单元素里自带的方法,用于重置表单
+                this.$refs.loginFormRef.resetFields()
+            },
+            // 表单登录
+            login() {
+                // validate表单预验证方法
+                this.$refs.loginFormRef.validate(async valid => {
+                    if (!valid) return;
+                    const {data: result} = await this.$http({
+                        url: 'login',
+                        method: 'post',
+                        data: this.loginForm
+                    });
+                    if (result.meta.status !== 200) return this.$message.error('您输入的用户名或密码不正确')
+                    this.$message.success('登录成功');
+                    // 将服务端返回的token值存储到本地sessionStorage中
+                    window.sessionStorage.setItem('token', result.data.token);
+                    // 登录成功后跳转到后台管理首页
+                    this.$router.push('/home')
+                })
+            }
+        }
     }
-  },
-  methods: {
-    // 表单重置
-    reset () {
-      // resetFields是element-ui,from表单元素里自带的方法,用于重置表单
-      this.$refs.loginFormRef.resetFields()
-    },
-    // 表单登录
-    login () {
-      // validate表单预验证方法
-      this.$refs.loginFormRef.validate(async valid => {
-        if (!valid) return
-        const { data: result } = await this.$http({
-          url: 'login',
-          method: 'post',
-          data: this.loginForm
-        })
-        if (result.meta.status !== 200) return this.$message.error('您输入的用户名或密码不正确')
-        this.$message.success('登录成功')
-        // 将服务端返回的token值存储到本地sessionStorage中
-        window.sessionStorage.setItem('token', result.data.token)
-        // 登录成功后跳转到后台管理首页
-        this.$router.push('/home')
-      })
-    }
-  }
-}
 </script>
 
 <style lang="less" scoped>
@@ -106,6 +107,7 @@ export default {
         left: 50%;
         transform: translate(-50%, -50%);
         background-color: #fff;
+
         img {
             width: 100%;
             height: 100%;
