@@ -27,6 +27,8 @@
 </template>
 
 <script>
+    import { loging } from "network/login";
+
     export default {
         name: 'Login',
         data() {
@@ -54,7 +56,7 @@
         methods: {
             // 表单重置
             reset() {
-                // resetFields是element-ui,from表单元素里自带的方法,用于重置表单
+                // resetFields是element-ui,from表单cls元素里自带的方法,用于重置表单
                 this.$refs.loginFormRef.resetFields()
             },
             // 表单登录
@@ -62,11 +64,7 @@
                 // validate表单预验证方法
                 this.$refs.loginFormRef.validate(async valid => {
                     if (!valid) return;
-                    const {data: result} = await this.$http({
-                        url: 'login',
-                        method: 'post',
-                        data: this.loginForm
-                    });
+                    const {data: result} = await loging(this.loginForm);
                     if (result.meta.status !== 200) return this.$message.error('您输入的用户名或密码不正确')
                     this.$message.success('登录成功');
                     // 将服务端返回的token值存储到本地sessionStorage中
