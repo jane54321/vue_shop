@@ -37,7 +37,7 @@
                         <el-button type="primary" @click="editUserData(scope.row.id)" size="mini" icon="el-icon-edit"/>
                         <el-button type="danger" @click="delUser(scope.row.id)" size="mini" icon="el-icon-delete"/>
                         <el-tooltip :enterable="false" content="分配角色" placement="top" effect="dark">
-                            <el-button type="warning" @click="setUser(scope.row.id)" size="mini"
+                            <el-button type="warning" @click="setUser(scope.row)" size="mini"
                                        icon="el-icon-setting"/>
                         </el-tooltip>
                     </template>
@@ -112,11 +112,38 @@
                 <el-button type="primary" @click="editUser">确 定</el-button>
             </span>
         </el-dialog>
+
+        <!-- 分配角色对话框 -->
+        <el-dialog
+                title="分配角色"
+                :visible.sync="assignRolesDialog"
+                width="50%"
+                @close="assignUserClose">
+            <div>
+                <p>当前的用户: {{assignRolesData.username}}</p>
+                <p>当前的角色: {{assignRolesData.roleName}}</p>
+                <p>分配新角色:
+                    <el-select v-model="assignRolesData.rid" placeholder="请选择">
+                        <el-option
+                                v-for="item in roleData"
+                                :key="item.id"
+                                :label="item.roleName"
+                                :value="item.id">
+                        </el-option>
+                    </el-select>
+                </p>
+            </div>
+                <span slot="footer" class="dialog-footer">
+                    <el-button @click="assignRolesDialog = false">取 消</el-button>
+                    <el-button type="primary" @click="assignRole">确 定</el-button>
+                </span>
+        </el-dialog>
     </div>
 </template>
 
 <script>
-    import {getUsersData, modifyStatus, addUserData, getUserData, editUserData, delUserData} from "network/user";
+    import {getUsersData, modifyStatus, addUserData, getUserData, editUserData, delUserData, assignRoles} from "network/user";
+    import {getRolesData} from "network/power";
 
     export default {
         name: "Users",
@@ -171,7 +198,19 @@
                 // 修改用户对话框显示与隐藏
                 editDialogVisible: false,
                 // 点击编辑展示用户表单数据
-                editUserFrom: {}
+                editUserFrom: {},
+                // 分配角色对话框显示与隐藏
+                assignRolesDialog: false,
+                //分配角色展示的信息
+                assignRolesData: {
+                    username: '',
+                    roleName: '',
+                    rid: '' // 已选中的角色id值
+                },
+                // 角色列表数据
+                roleData: [],
+                // 当前角色id
+                userId: ''
             }
         },
         created() {
@@ -241,10 +280,6 @@
                 }
                 this.$message.success('修改用户状态成功!');
             },
-            // 设置用户
-            setUser(id) {
-                console.log(id);
-            },
             // 修改每页显示条数时触发
             handleSizeChange(newSize) {
                 this.queryInfo.pagesize = newSize;
@@ -270,11 +305,34 @@
             },
             editDialogCLose() {
                 this.$refs.editUserFromRef.resetFields();
+            },
+            // 点击分配角色弹出对话框
+            async setUser(user) {
+                this.assignRolesData.username = user.username;
+                this.assignRolesData.roleName = user.role_name;
+                const {data: res} = await getRolesData(user);
+                if (res.meta.status !== 200) return this.$message.error('获取角色列表失败');
+                this.roleData = res.data;
+                this.userId = user.id;
+                this.assignRolesDialog = true;
+            },
+            // 分配角色
+            async assignRole() {
+                if (!this.assignRolesData.rid) return this.$message.error('请选择要分配的角色');
+                const {data: res} = await assignRoles(this.userId, this.assignRolesData.rid);
+                if (res.meta.status !== 200) return this.$message.error('分配角色失败');
+                this.assignRolesDialog = false;
+                this.getUserList();
+                this.$message.success('分配角色成功');
+            },
+            // 监听分配角色对话框关闭
+            assignUserClose() {
+                this.assignRolesData = {};
             }
         }
     }
 </script>
 
-<style scoped>
+<style lang="less" scoped>
 
 </style>

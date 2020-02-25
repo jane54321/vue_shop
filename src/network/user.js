@@ -51,3 +51,12 @@ export function delUserData(id) {
         method: 'delete'
     })
 }
+
+// 分配用户角色
+export function assignRoles(id, rid) {
+    return axios({
+        url: `users/${id}/role`,
+        method: 'put',
+        data: {rid}
+    })
+}
