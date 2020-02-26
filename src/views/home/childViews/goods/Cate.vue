@@ -30,8 +30,8 @@
                 </template>
 
                 <template slot="operation" slot-scope="scope">
-                    <el-button type="primary" size="mini" icon="el-icon-edit">编辑</el-button>
-                    <el-button type="danger" size="mini" icon="el-icon-delete">删除</el-button>
+                    <el-button type="primary" @click="showEditCate(scope.row.cat_id)" size="mini" icon="el-icon-edit">编辑</el-button>
+                    <el-button type="danger" @click="showDelCate(scope.row.cat_id)" size="mini" icon="el-icon-delete">删除</el-button>
                 </template>
             </tree-table>
             <el-pagination
@@ -72,11 +72,28 @@
                 <el-button type="primary" @click="addCate">确 定</el-button>
             </span>
         </el-dialog>
+
+        <!-- 修改分类 -->
+        <el-dialog
+                title="修改分类"
+                :visible.sync="editCateDialog"
+                width="50%"
+                @close="editCateClose">
+            <el-form :model="editCateForm" ref="editCateRef" :rules="rules" label-width="90px">
+                <el-form-item prop="cat_name" label="分类名称:">
+                    <el-input v-model="editCateForm.cat_name"/>
+                </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="editCateDialog = false">取 消</el-button>
+                <el-button type="primary" @click="editCate">确 定</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
 <script>
-    import {getCategories, getParentCateData, addCateData} from "network/goods";
+    import {getCategories, getParentCateData, addCateData, geteditCateData, editCateData, delCateData} from "network/goods";
 
     export default {
         name: "Cate",
@@ -135,7 +152,10 @@
                     checkStrictly: true // 允许任意一级选择
                 },
                 // 选中的父级分类的id数组
-                selectedKeys: []
+                selectedKeys: [],
+                // 编辑对话框显示隐藏
+                editCateDialog: false,
+                editCateForm: {}
             }
         },
         created() {
@@ -195,6 +215,42 @@
                 this.selectedKeys = [];
                 this.addCateForm.cat_pid = 0;
                 this.addCateForm.cat_level = 0;
+            },
+            // 编辑对话框
+            async showEditCate(id) {
+                const {data: res} = await geteditCateData(id);
+                if (res.meta.status !== 200) return this.$message.error('查询分类信息失败');
+                this.editCateForm = res.data;
+                this.editCateDialog = true;
+            },
+            // 修改
+            editCate() {
+                this.$refs.editCateRef.validate(async valid => {
+                    if (!valid) return;
+                    const {data: res} = await editCateData(this.editCateForm);
+                    if (res.meta.status !== 200) return this.$message.error('修改分类信息失败');
+                    this.getCateData();
+                    this.editCateDialog = false;
+                    this.$message.success('修改分类信息成功');
+                })
+            },
+            // 删除对话框
+            async showDelCate(id) {
+                const result = await this.$confirm('此操作会永久删除该分类，是否继续?','提示',{
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).catch(err => err);
+                if (result !== 'confirm') return this.$message.info('取消操作')
+                const {data: res} = await delCateData(id);
+                if (res.meta.status !== 200) return this.$message.error('删除分类失败');
+                this.queryInfo.pagenum = 1;
+                this.getCateData();
+                this.$message.success('删除分类成功');
+            },
+            // 编辑对话框关闭
+            editCateClose() {
+                this.$refs.editCateRef.resetFields();
             }
         }
     }
