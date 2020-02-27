@@ -37,3 +37,32 @@ export function getRoleById(id) {
         url: `roles/${id}`
     })
 }
+
+// 添加角色
+export function addRoleData(data) {
+    return axios({
+        url: 'roles',
+        method: 'post',
+        data
+    })
+}
+
+// 编辑修改角色信息
+export function editRoleData(roleInfo) {
+    return axios({
+        url: `roles/${roleInfo.roleId}`,
+        method: 'put',
+        data: {
+            roleName: roleInfo.roleName,
+            roleDesc: roleInfo.roleDesc
+        }
+    })
+}
+
+// 删除角色
+export function delRoleData(id) {
+    return axios({
+        url: `roles/${id}`,
+        method: 'delete'
+    })
+}
