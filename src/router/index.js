@@ -4,11 +4,14 @@ import VueRouter from 'vue-router'
 const Login = () => import('views/login/Login');
 const Home = () => import('views/home/Home');
 const Welcome = () => import('views/home/childViews/Welcome');
-const Users = () => import('views/home/childViews/user/Users');
-const Rights = () => import('views/home/childViews/power/Rights');
-const Roles = () => import('views/home/childViews/power/Roles');
-const Category = () => import('views/home/childViews/goods/Cate');
-const Params = () => import('views/home/childViews/goods/Params');
+const Users = () => import('views/user/Users');
+const Rights = () => import('views/power/Rights');
+const Roles = () => import('views/power/Roles');
+const Category = () => import('views/goods/Cate');
+const Params = () => import('views/goods/Params');
+const List = () => import('views/goods/List');
+const AddGoods = () => import('views/goods/AddGoods');
+const EditGoods = () => import('views/goods/EditGoods');
 
 Vue.use(VueRouter);
 
@@ -49,6 +52,19 @@ const routes = [
             {
                 path: '/params',
                 component: Params
+            },
+            {
+                path: '/goods',
+                component: List,
+
+            },
+            {
+                path: '/goods/add',
+                component: AddGoods
+            },
+            {
+                path: '/goods/edit/:id',
+                component: EditGoods
             }
         ]
     }

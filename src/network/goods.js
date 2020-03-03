@@ -105,3 +105,53 @@ export function delParamData(catId, attrId) {
         method: 'delete'
     })
 }
+
+// 获取商品列表数据
+export function getGoodsData(queryInfo) {
+    return axios({
+        url: 'goods',
+        params: queryInfo
+    })
+}
+
+// 删除商品
+export function delGoodsData(id) {
+    return axios({
+        url: `goods/${id}`,
+        method: 'delete'
+    })
+}
+
+// 添加商品
+export function addGoodsData(data) {
+    return axios({
+        url : "goods",
+        method: 'post',
+        data
+    })
+}
+
+// 根据id查询商品信息
+export function getGoodsById(id) {
+    return axios({
+        url: `goods/${id}`
+    })
+}
+
+// 编辑提交商品
+export function editGoodsData(data) {
+    return axios({
+        url: `goods/${data.id}`,
+        method: 'put',
+        data: {
+            goods_name: data.goods_name,
+            goods_price: data.goods_price,
+            goods_number: data.goods_number,
+            goods_weight: data.goods_weight,
+            goods_introduce: data.goods_introduce,
+            goods_cat: data.goods_cat,
+            pics: data.pics,
+            attrs: data.attrs
+        }
+    })
+}
