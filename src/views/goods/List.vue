@@ -51,7 +51,7 @@
 
 <script>
     import {getGoodsData, delGoodsData} from 'network/goods'
-    import {formatDate} from "@/common/utils";
+    import {forMatMixin} from "@/common/mixin";
 
     export default {
         name: "List",
@@ -69,6 +69,7 @@
         created() {
             this.getGoodsList();
         },
+        mixins: [forMatMixin],
         methods: {
             async getGoodsList() {
                 const {data: res} = await getGoodsData(this.queryInfo);
@@ -99,17 +100,6 @@
             },
             goEditGoods(id) {
                 this.$router.push(`/goods/edit/${id}`);
-            }
-        },
-        filters: {
-            // 时间格式化
-            format(value) {
-                // 1.将时间戳转成date对象
-                // new Date()得到的是毫秒单位，服务器返回的秒单位，所以乘1000
-                const date = new Date(value * 1000);
-
-                // 2.将date进行格式化
-                return formatDate(date, 'yyyy-MM-dd hh:mm:ss');
             }
         }
     }
