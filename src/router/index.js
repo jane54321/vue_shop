@@ -13,6 +13,8 @@ const List = () => import('views/goods/List');
 const AddGoods = () => import('views/goods/AddGoods');
 const EditGoods = () => import('views/goods/EditGoods');
 const Order = () => import('views/order/Order');
+const Report = () => import('views/report/Report');
+const Epidemic = () => import('views/report/Epidemic');
 
 Vue.use(VueRouter);
 
@@ -70,6 +72,14 @@ const routes = [
             {
                 path: '/orders',
                 component: Order
+            },
+            {
+                path: '/reports',
+                component: Report
+            },
+            {
+                path: '/epidemic',
+                component: Epidemic
             }
         ]
     }

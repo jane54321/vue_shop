@@ -1,4 +1,7 @@
 module.exports = {
+    // 避免eslint的报错
+    //lintOnSave: false,
+
     configureWebpack: {
         resolve: {
             alias: {

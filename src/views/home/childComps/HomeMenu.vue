@@ -60,6 +60,12 @@
             async getMenuAll() {
                 const {data: res} = await getMenuList();
                 if (res.meta.status !== 200) return this.$message.error(res.meta.msg);
+                let obj = {
+                    id: 666,
+                    authName: '国内疫情',
+                    path: 'epidemic'
+                };
+                res.data[4].children.push(obj);
                 this.menuList = res.data;
             },
             // 保存连接的激活状态
