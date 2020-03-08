@@ -10,7 +10,7 @@ import 'assets/fonts/iconfont.css'
 import 'assets/css/global.css'
 
 // 设置当前入口文件时开发模式还是生产模式
-Vue.config.productionTip = false;
+Vue.config.productionTip = true;
 
 new Vue({
     router,
