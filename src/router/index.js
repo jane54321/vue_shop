@@ -1,20 +1,24 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
-const Login = () => import('views/login/Login');
-const Home = () => import('views/home/Home');
-const Welcome = () => import('views/home/childViews/Welcome');
-const Users = () => import('views/user/Users');
-const Rights = () => import('views/power/Rights');
-const Roles = () => import('views/power/Roles');
-const Category = () => import('views/goods/Cate');
-const Params = () => import('views/goods/Params');
-const List = () => import('views/goods/List');
-const AddGoods = () => import('views/goods/AddGoods');
-const EditGoods = () => import('views/goods/EditGoods');
-const Order = () => import('views/order/Order');
-const Report = () => import('views/report/Report');
-const Epidemic = () => import('views/report/Epidemic');
+const Login = () => import(/* webpackChunkName: "login_home_welcome" */ 'views/login/Login');
+const Home = () => import(/* webpackChunkName: "login_home_welcome" */ 'views/home/Home');
+const Welcome = () => import(/* webpackChunkName: "login_home_welcome" */ 'views/home/childViews/Welcome');
+
+const Users = () => import(/* webpackChunkName: "users_rights_roles" */ 'views/user/Users');
+const Rights = () => import(/* webpackChunkName: "users_rights_roles" */ 'views/power/Rights');
+const Roles = () => import(/* webpackChunkName: "users_rights_roles" */ 'views/power/Roles');
+
+const Category = () => import(/* webpackChunkName: "cate_params" */ 'views/goods/Cate');
+const Params = () => import(/* webpackChunkName: "cate_params" */ 'views/goods/Params');
+
+const List = () => import(/* webpackChunkName: "goodsList" */ 'views/goods/List');
+const AddGoods = () => import(/* webpackChunkName: "goodsList" */ 'views/goods/AddGoods');
+const EditGoods = () => import(/* webpackChunkName: "goodsList" */ 'views/goods/EditGoods');
+
+const Order = () => import(/* webpackChunkName: "order_report_epidemic" */ 'views/order/Order');
+const Report = () => import(/* webpackChunkName: "order_report_epidemic" */ 'views/report/Report');
+const Epidemic = () => import(/* webpackChunkName: "order_report_epidemic" */ 'views/report/Epidemic');
 
 Vue.use(VueRouter);
 

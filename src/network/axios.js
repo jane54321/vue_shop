@@ -1,4 +1,11 @@
 import Axios from 'axios'
+// 导入NProgress和对应的样式和js
+import NProgress from 'nprogress'
+// 生产环境下不引用，使用外部加载
+if (process.env.NODE_ENV === 'development') {
+    import ('nprogress/nprogress.css')
+}
+
 
 export function axios(option) {
     return new Promise((resolve, reject) => {
@@ -7,9 +14,18 @@ export function axios(option) {
             // baseURL: 'http://www.vueshop.com/api/v1/'
         });
 
-        //请求拦截
+        // 在request拦截器中展示进度条
+        // 请求拦截
         instance.interceptors.request.use(config => {
+            NProgress.start();
             config.headers.Authorization = window.sessionStorage.getItem('token');
+            return config;
+        });
+
+        // 在response拦截器中隐藏进度条
+        // 响应拦截
+        instance.interceptors.response.use(config => {
+            NProgress.done();
             return config;
         });
 
